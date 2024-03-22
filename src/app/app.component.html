@@ -1,4 +1,9 @@
-@if(sets$ | async; as sets) {
+<div class="container mx-auto">
+
+<app-header [sets]="(sets$ | async) || []" (setSelected)="loadCardsFromSet($event)"></app-header>
+
+</div>
+<!-- @if(sets$ | async; as sets) {
   <form class="max-w-sm mx-auto">
     <label for="set-select" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select an option</label>
     <select id="set-select" [formControl]="selectedSet" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
@@ -15,4 +20,4 @@
   @for (card of setCards; track $index) {
   <img [src]="card.image_uris.normal">
   }
-</div>
+</div> -->
