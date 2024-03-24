@@ -7,6 +7,7 @@ import { Observable, filter, firstValueFrom, map, takeUntil } from 'rxjs';
 import { Set, Card } from './core/models'
 import { ScryfallService } from './core/services/scryfall.service';
 import { HeaderComponent } from "./shared/components/header/header.component";
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 @Component({
     selector: 'app-root',
     standalone: true,
@@ -15,7 +16,7 @@ import { HeaderComponent } from "./shared/components/header/header.component";
     imports: [RouterOutlet, CommonModule, HttpClientModule, ReactiveFormsModule, HeaderComponent]
 })
 export class AppComponent implements OnInit {
-  constructor(private httpService: HttpClient, private scryfallService: ScryfallService) { }
+  constructor(private scryfallService: ScryfallService) { }
   sets$: Observable<Set[]> = new Observable<Set[]>();
   selectedSet = new FormControl<string>('');
   setCards: Card[] = [];
@@ -24,11 +25,13 @@ export class AppComponent implements OnInit {
     this.sets$ = this.scryfallService.getAllSets();
   }
 
-  loadCardsFromSet(data: any) {
-    console.log('loadCardFromSet', data);
+  loadCardsFromSet(setCode: string) {
+    console.log('loadCardFromSet', setCode);
+    this.scryfallService.getAllCardsBySetCode(setCode)
   }
   // async getAllCardsBySetCode(setCode: string) {
   //   const queryParameters: string = `q=b%3A${setCode}+order%3Aset+direction%3Aasc&unique=cards&as=grid&order=name`;
+  //with lang option: https://scryfall.com/search?order=released&q=lang%3Aen&unique=prints
   //   this.setCards = [];
   //   let hasMore: boolean = true;
   //   let url: string = 'https://api.scryfall.com/cards/search?' + queryParameters;

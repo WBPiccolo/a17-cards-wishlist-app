@@ -1,0 +1,11 @@
+<mat-form-field class="example-full-width">
+    <mat-label>Select a set</mat-label>
+    <input type="text" matInput [formControl]="setFormControl" [matAutocomplete]="auto">
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="selectOption($event)">
+        @for (set of filteredSets | async; track set) {
+        <mat-option [value]="set">
+            {{set.code | uppercase}} - {{set.name}}
+        </mat-option>
+        }
+    </mat-autocomplete>
+</mat-form-field>
