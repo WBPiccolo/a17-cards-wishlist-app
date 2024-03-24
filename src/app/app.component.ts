@@ -1,33 +1,37 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
-import { Observable, filter, firstValueFrom, map, takeUntil } from 'rxjs';
-import { Set, Card } from './core/models'
+import { Observable } from 'rxjs';
+import { Set, Card } from './core/models';
 import { ScryfallService } from './core/services/scryfall.service';
 import { HeaderComponent } from "./shared/components/header/header.component";
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+
 @Component({
-    selector: 'app-root',
-    standalone: true,
-    templateUrl: './app.component.html',
-    styleUrl: './app.component.scss',
-    imports: [RouterOutlet, CommonModule, HttpClientModule, ReactiveFormsModule, HeaderComponent]
+  selector: 'app-root',
+  standalone: true,
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.scss',
+  imports: [RouterOutlet, CommonModule, HttpClientModule, ReactiveFormsModule, HeaderComponent, MatProgressSpinnerModule]
 })
 export class AppComponent implements OnInit {
-  constructor(private scryfallService: ScryfallService) { }
+  constructor(protected scryfallService: ScryfallService) { }
   sets$: Observable<Set[]> = new Observable<Set[]>();
   selectedSet = new FormControl<string>('');
   setCards: Card[] = [];
+
+  showSpinner: boolean = false;
 
   ngOnInit(): void {
     this.sets$ = this.scryfallService.getAllSets();
   }
 
-  loadCardsFromSet(setCode: string) {
+  async loadCardsFromSet(setCode: string) {
     console.log('loadCardFromSet', setCode);
-    this.scryfallService.getAllCardsBySetCode(setCode)
+    this.setCards = [];
+    this.setCards = await this.scryfallService.getAllCardsBySetCode(setCode);
   }
   // async getAllCardsBySetCode(setCode: string) {
   //   const queryParameters: string = `q=b%3A${setCode}+order%3Aset+direction%3Aasc&unique=cards&as=grid&order=name`;
