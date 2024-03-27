@@ -9,13 +9,14 @@ import { ScryfallService } from './core/services/scryfall.service';
 import { HeaderComponent } from "./shared/components/header/header.component";
 import { SpinnerComponent } from "./shared/components/spinner/spinner.component";
 import languages from './core/costants/languages';
+import { CardElementComponent } from "./shared/components/card-element/card-element.component";
 
 @Component({
     selector: 'app-root',
     standalone: true,
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss',
-    imports: [RouterOutlet, CommonModule, HttpClientModule, ReactiveFormsModule, HeaderComponent, SpinnerComponent]
+    imports: [RouterOutlet, CommonModule, HttpClientModule, ReactiveFormsModule, HeaderComponent, SpinnerComponent, CardElementComponent]
 })
 export class AppComponent implements OnInit, OnDestroy {
   constructor(protected scryfallService: ScryfallService) { }
@@ -48,6 +49,16 @@ export class AppComponent implements OnInit, OnDestroy {
     console.log('loadCardFromSet', setCode);
     this.setCards = [];
     this.setCards = await this.scryfallService.getAllCardsBySetCode(setCode, language || 'en');
+  }
+
+  selectAllCards(status: boolean) {
+    console.log('selectAlLCards', event);
+
+    this.setCards = this.setCards.map(card => ({...card, selected: status}));
+  }
+
+  openCardListModal() {
+    console.log('openCardListModal');
   }
 
   ngOnDestroy() {

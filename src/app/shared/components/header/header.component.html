@@ -9,4 +9,10 @@
       }
     </mat-select>
   </mat-form-field>
+
+  <mat-slide-toggle labelPosition="before" (change)="selectDeselectClicked.emit($event.checked)">Select all cards</mat-slide-toggle>
+
+  <button mat-flat-button (click)="getListClicked.emit()">Get cards list</button>
+
+
 </form>
