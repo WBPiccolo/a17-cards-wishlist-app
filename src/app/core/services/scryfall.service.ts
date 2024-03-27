@@ -23,9 +23,9 @@ export class ScryfallService {
     );
   }
 
-  async getAllCardsBySetCode(setCode: string, langCode?: string): Promise<MtgCard[]> {
+  async getAllCardsBySetCode(setCode: string, langCode: string = 'en'): Promise<MtgCard[]> {
     let setCards: MtgCard[] = [];
-    const queryParameters: string = `q=b%3A${setCode}+order%3Aset+direction%3Aasc&unique=cards&as=grid&order=name`;
+    const queryParameters: string = `q=b:${setCode}+lang:${langCode}+order:set+direction:asc&unique=cards&as=grid&order=name`;
     let url: string = 'https://api.scryfall.com/cards/search?' + queryParameters;
 
     let hasMore: boolean = true;

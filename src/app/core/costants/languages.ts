@@ -1,4 +1,4 @@
-[
+const languages = [
   {
     "code": "en",
     "name": "English",
@@ -67,4 +67,6 @@
     "code": "ph",
     "name": "Phyrexian",
   }
-]
+];
+
+export default languages;

@@ -1,13 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, ReplaySubject, takeUntil } from 'rxjs';
 import { Set, Card } from './core/models';
 import { ScryfallService } from './core/services/scryfall.service';
 import { HeaderComponent } from "./shared/components/header/header.component";
 import { SpinnerComponent } from "./shared/components/spinner/spinner.component";
+import languages from './core/costants/languages';
 
 @Component({
     selector: 'app-root',
@@ -16,21 +17,41 @@ import { SpinnerComponent } from "./shared/components/spinner/spinner.component"
     styleUrl: './app.component.scss',
     imports: [RouterOutlet, CommonModule, HttpClientModule, ReactiveFormsModule, HeaderComponent, SpinnerComponent]
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   constructor(protected scryfallService: ScryfallService) { }
   sets$: Observable<Set[]> = new Observable<Set[]>();
   selectedSet = new FormControl<string>('');
   setCards: Card[] = [];
+  setLanguages = languages;
+ 
+  headerForm = new FormGroup({
+    set: new FormControl(),
+    language: new FormControl(),
+  });
 
-  showSpinner: boolean = false;
+  private destroy$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   ngOnInit(): void {
     this.sets$ = this.scryfallService.getAllSets();
+
+    this.headerForm.valueChanges.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(newVal => {
+      console.log('headerForm newVal', newVal);
+      if(newVal.set) {
+        this.loadCardsFromSet(newVal.set.code, newVal.language)
+      }
+    })
   }
 
-  async loadCardsFromSet(setCode: string) {
+  async loadCardsFromSet(setCode: string, language?: string) {
     console.log('loadCardFromSet', setCode);
     this.setCards = [];
-    this.setCards = await this.scryfallService.getAllCardsBySetCode(setCode);
+    this.setCards = await this.scryfallService.getAllCardsBySetCode(setCode, language || 'en');
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next(true);
+    this.destroy$.complete();
   }
 }
