@@ -7,7 +7,7 @@
 <div class="body">
   <div class="grid grid-cols-4 gap-4">
     @for (card of setCards; track $index) {
-      <app-card-element [card]="card"></app-card-element>
+      <app-card-element [card]="card" (cardClicked)="selectDeselectCard($event, $index)"></app-card-element>
     }
   </div>
 </div>

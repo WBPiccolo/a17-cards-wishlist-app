@@ -1,4 +1,8 @@
-@if(card?.image_uris?.png) {
-<div class="image" [style]="'background-image:'  + card.image_uris.png">
+<div>
+    @if(card?.image_uris?.png) {
+        <div class="image" [ngStyle]="{'background-image':  'url('+card.image_uris.png+')'}" [ngClass]="card.selected? '' : 'opacity-45'" (click)="cardClicked.emit(card)">
+            &nbsp;
+        </div>
+    } 
+    <div> {{card.name}}</div>       
 </div>
-}

@@ -1,0 +1,13 @@
+<div mat-dialog-title>
+    <div class="flex px-2 justify-between">
+        <h2>Title</h2>
+        <button mat-icon-button aria-label="close dialog" (click)="closeDialog()">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+</div>
+<mat-dialog-content>
+    <mat-form-field class="w-full min-h-full">
+        <textarea matInput disabled [(ngModel)]="data" [rows]="30"></textarea>
+      </mat-form-field>
+</mat-dialog-content>
